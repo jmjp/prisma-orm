@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { prismaClient } from '../src/database/database';
-import routes from './routes';
-import logger from './middlewares/HttpLogger';
+import { routes } from './routes';
+import { loggerHTTP } from './middlewares/HttpLogger';
 
 class App {
     public express: express.Application;
@@ -17,7 +17,7 @@ class App {
     private middlewares() {
         this.express.use(express.json());
         this.express.use(cors());
-        this.express.use(logger);
+        this.express.use(loggerHTTP);
     }
 
     private async database(): Promise<void> {

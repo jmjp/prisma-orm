@@ -21,4 +21,4 @@ const loggerDB = async (params: Prisma.MiddlewareParams, next: (params: Prisma.M
   return result
 };
 
-export default loggerDB;
+export { loggerDB };

@@ -6,7 +6,7 @@ import { blue, blueBright, green, red, cyan, yellow} from 'chalk';
 const getProcessingTimeInMS = (time: [number, number]): string => {
   return `${(time[0] * 1000 + time[1] / 1e6).toFixed(2)}ms`
 }
-function logger(req: Request, res: Response, next: NextFunction) {
+function loggerHTTP(req: Request, res: Response, next: NextFunction) {
   const id = uuidv4();
   const now = new Date();
   const timestamp = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
@@ -25,4 +25,4 @@ function logger(req: Request, res: Response, next: NextFunction) {
   next();
 };
 
-export default logger;
+  export { loggerHTTP };

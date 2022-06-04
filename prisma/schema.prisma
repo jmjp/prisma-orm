@@ -9,55 +9,83 @@ generator client {
 
 model Post {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  slug      String    @unique
   title     String
   content   Media     @relation(fields: [contentId], references: [id])
-  contentId String    @db.ObjectId
+  contentId String    @unique @db.ObjectId
   comments  Comment[]
+  likes     Like[]
   user      User      @relation(fields: [userId], references: [id])
   userId    String    @db.ObjectId
+  views     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
 }
 
 model Comment {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  post    Post   @relation(fields: [postId], references: [id])
-  postId  String @db.ObjectId
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @db.ObjectId
-  comment String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 }
 
 model Like {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  User   User?    @relation(fields: [userId], references: [id])
-  userId String[] @db.ObjectId
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
 }
 
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  email    String    @unique
-  username String    @unique
-  password String?
-  posts    Post[]
-  Comment  Comment[]
-  Media    Media[]
-  Follow   Follow[]
-  Like     Like[]
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  username  String    @unique
+  provider  Providers @default(Google)
+  posts     Post[]
+  comments  Comment[]
+  follow    Follow[]
+  likes     Like[]
+  avatar    Avatar?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
 }
 
 model Media {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  fileId       String @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  fileId       String   @unique()
   name         String
   url          String
   thumbnailUrl String
-  user         User   @relation(fields: [userId], references: [id])
-  userId       String @db.ObjectId
-  Post         Post[]
+  Post         Post?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt()
+}
+
+model Avatar {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  fileId       String   @unique()
+  name         String
+  url          String
+  thumbnailUrl String
+  User         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt()
 }
 
 model Follow {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  User   User    @relation(fields: [userId], references: [id])
-  userId String[] @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String[] @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+enum Providers {
+  Google
+  Facebook
+  Apple
 }

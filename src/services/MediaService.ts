@@ -6,4 +6,4 @@ const MediaService = new ImageKit({
     urlEndpoint : ""
 })
 
-export { MediaService}
+export { MediaService }
